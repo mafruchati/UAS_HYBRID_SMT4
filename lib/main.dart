@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:implementasi_busgo/pemesanan/pemilihan%20kursi.dart';
-
-
-
+import 'package:implementasi_busgo/halaman_login/halaman_login.dart';
 
 void main() {
-  runApp(Main());
+  runApp(const MyApp()); 
 }
 
-class Main extends StatelessWidget {
-  const Main({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BusGo',
       debugShowCheckedModeBanner: false,
-      home: (SeatSelectionPage()),
+      home: LoginPage(), // Pastikan LoginPage sudah diimport
     );
   }
 }
-

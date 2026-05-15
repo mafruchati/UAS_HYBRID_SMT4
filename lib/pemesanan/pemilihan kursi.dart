@@ -17,356 +17,253 @@ class SeatSelectionPage extends StatefulWidget {
 }
 
 class _SeatSelectionPageState extends State<SeatSelectionPage> {
-  // Status kursi: 0=available, 1=booked, 2=your seat
-  // Representasi kursi sesuai posisi pada gambar
-  final List<List<int>> seats = [
-    [1, 0, 0, 0], // Row 1 (A,B,C,D)
-    [0, 0, 0, 1],
-    [0, 0, 2, 2],
-    [1, 1, 0, 0],
-    [0, 0, 0, 1],
-  ];
+  // Status kursi: 0=available, 1=booked, 2=selected (your choice)
+  // Kita buat dua map data untuk Lower dan Upper Deck
+  late List<List<int>> lowerSeats;
+  late List<List<int>> upperSeats;
 
-  final List<String> columns = ['A', 'B', 'C', 'D'];
-
-  // Untuk toggle Lower/Upper deck
   bool isLowerDeck = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inisialisasi data dummy
+    lowerSeats = [
+      [1, 0, 0, 0],
+      [0, 0, 0, 1],
+      [0, 0, 0, 0],
+      [1, 1, 0, 0],
+      [0, 0, 0, 1],
+    ];
+    upperSeats = [
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 1, 0],
+    ];
+  }
+
+  void _handleSeatTap(int row, int col) {
+    setState(() {
+      List<List<int>> currentSeats = isLowerDeck ? lowerSeats : upperSeats;
+      if (currentSeats[row][col] == 0) {
+        currentSeats[row][col] = 2; // Pilih
+      } else if (currentSeats[row][col] == 2) {
+        currentSeats[row][col] = 0; // Batal pilih
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[500],
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Container(
-            color: Color.fromRGBO(
-              13,
-              110,
-              253,
-              1,
-            ), // warna biru background utama
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header dengan tombol back, title dan next
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Pilih Kursi',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Next',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+      backgroundColor: const Color(0xFF0D6EFD), // Biru Utama
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
+        title: Text('Pilih Kursi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: Text('Next', style: TextStyle(color: Colors.white, fontSize: 16)),
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          // Info Rute
+          _buildRouteInfo(),
+          
+          SizedBox(height: 20),
 
-                // Rute perjalanan
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Bawen',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Icon(Icons.sync_alt, color: Colors.white, size: 24),
-                      SizedBox(width: 5),
-                      Text(
-                        'Bekasi',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          // Legend
+          _buildLegend(),
 
-                // Tanggal dan hari
-                Center(
-                  child: Text(
-                    '12 - Januari - 2025 | Minggu',
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ),
+          SizedBox(height: 20),
 
-                SizedBox(height: 20),
-
-                // Placeholder box
-                Center(
-                  child: Container(
-                    width: 200,
-                    height: 50,
-                    color: Colors.grey[300],
-                  ),
-                ),
-
-                SizedBox(height: 15),
-
-                // Keterangan color box
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _legendBox(Colors.red[300]!, 'Booked'),
-                      _legendBox(Colors.grey[300]!, 'Available'),
-                      _legendBox(Colors.orange, 'Your Seat', isCircle: true),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 15),
-
-                // Row kolom kursi (A B C D)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: columns
-                        .map(
-                          (col) => Text(
-                            col,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-
-                SizedBox(height: 4),
-
-                Expanded(
-                  child: Center(
+          // Area Bus
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: Column(
+                children: [
+                  // Driver/Front Area Indicator
+                  _buildDriverArea(),
+                  
+                  Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Kursi kiri (2 kolom)
-                        _seatColumn(0),
-                        SizedBox(width: 20),
-
-                        // Lower Deck text vertikal
-                        RotatedBox(
-                          quarterTurns: 3,
-                          child: Text(
-                            isLowerDeck ? 'LOWER DECK' : 'UPPER DECK',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-
-                        // Kursi kanan (2 kolom)
-                        _seatColumn(2),
+                        _seatColumn(0), // Kolom A & B
+                        _buildDeckIndicator(),
+                        _seatColumn(2), // Kolom C & D
                       ],
                     ),
                   ),
-                ),
-
-                SizedBox(height: 10),
-
-                // Toggle Lower/Upper
-                Center(
-                  child: Container(
-                    width: 200,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isLowerDeck = true;
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: isLowerDeck
-                                    ? Colors.red[100]
-                                    : Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10),
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'LOWER',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(width: 2, color: Colors.grey[400]),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isLowerDeck = false;
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: !isLowerDeck
-                                    ? Colors.white
-                                    : Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'UPPER',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 20),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+
+          // Toggle Lower/Upper
+          _buildDeckToggle(),
+          SizedBox(height: 30),
+        ],
       ),
     );
   }
 
-  Widget _legendBox(Color color, String label, {bool isCircle = false}) {
-    return Row(
+  Widget _buildRouteInfo() {
+    return Column(
       children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            color: color,
-            shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Bawen', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(Icons.sync_alt, color: Colors.white),
+            ),
+            Text('Bekasi', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+          ],
         ),
-        SizedBox(width: 6),
-        Text(label, style: TextStyle(color: Colors.white)),
+        Text('12 - Januari - 2025 | Minggu', style: TextStyle(color: Colors.white70, fontSize: 14)),
       ],
     );
   }
 
-  // Membuat kolom kursi, param colIndex adalah index kolom pertama di kelompok dua kursi (kiri:0, kanan:2)
-  Widget _seatColumn(int colIndex) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(
-        seats.length,
-        (row) => Row(
-          children: [
-            _seatBox(seats[row][colIndex]),
-            SizedBox(width: 12),
-            _seatBox(seats[row][colIndex + 1]),
-          ],
+  Widget _buildLegend() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _legendItem(Colors.red[300]!, 'Booked'),
+        SizedBox(width: 15),
+        _legendItem(Colors.white, 'Available'),
+        SizedBox(width: 15),
+        _legendItem(Colors.orange, 'Your Seat', isCircle: true),
+      ],
+    );
+  }
+
+  Widget _legendItem(Color color, String label, {bool isCircle = false}) {
+    return Row(
+      children: [
+        Container(
+          width: 16, height: 16,
+          decoration: BoxDecoration(
+            color: color,
+            shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+            borderRadius: isCircle ? null : BorderRadius.circular(4),
+          ),
+        ),
+        SizedBox(width: 5),
+        Text(label, style: TextStyle(color: Colors.white, fontSize: 12)),
+      ],
+    );
+  }
+
+  Widget _buildDriverArea() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Icon(Icons.settings_input_component_rounded, color: Colors.white30, size: 40), // Icon Setir
+    );
+  }
+
+  Widget _buildDeckIndicator() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: RotatedBox(
+        quarterTurns: 3,
+        child: Text(
+          isLowerDeck ? 'LOWER DECK' : 'UPPER DECK',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2),
         ),
       ),
     );
   }
 
-  // Widget kursi/color box
-  Widget _seatBox(int status) {
-    Color color;
-    Widget? child;
+  Widget _buildDeckToggle() {
+    return Container(
+      width: 220,
+      height: 45,
+      decoration: BoxDecoration(
+        color: Colors.white24,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          _toggleButton('LOWER', isLowerDeck, () => setState(() => isLowerDeck = true)),
+          _toggleButton('UPPER', !isLowerDeck, () => setState(() => isLowerDeck = false)),
+        ],
+      ),
+    );
+  }
 
-    switch (status) {
-      case 0:
-        color = Colors.grey[300]!;
-        break;
-      case 1:
-        color = Colors.red[300]!;
-        break;
-      case 2:
-        color = Colors.orange;
-        // Membuat tanda bulat di kursi "Your Seat"
-        child = Center(
-          child: Container(
-            width: 14,
-            height: 14,
-            decoration: BoxDecoration(
-              color: Colors.purpleAccent,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
+  Widget _toggleButton(String label, bool active, VoidCallback onTap) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: active ? Color(0xFF0D6EFD) : Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        );
-        break;
-      default:
-        color = Colors.grey[300]!;
-    }
-
-    return Container(
-      width: 36,
-      height: 36,
-      margin: EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8),
+        ),
       ),
-      child: child,
+    );
+  }
+
+  Widget _seatColumn(int colStart) {
+    List<List<int>> currentSeats = isLowerDeck ? lowerSeats : upperSeats;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(5, (row) {
+        return Row(
+          children: [
+            _seatBox(row, colStart, currentSeats[row][colStart]),
+            SizedBox(width: 10),
+            _seatBox(row, colStart + 1, currentSeats[row][colStart + 1]),
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _seatBox(int row, int col, int status) {
+    return GestureDetector(
+      onTap: () => _handleSeatTap(row, col),
+      child: Container(
+        width: 40,
+        height: 40,
+        margin: EdgeInsets.symmetric(vertical: 6),
+        decoration: BoxDecoration(
+          color: status == 0 ? Colors.white : (status == 1 ? Colors.red[300] : Colors.orange),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            if (status == 2) BoxShadow(color: Colors.orange.withOpacity(0.5), blurRadius: 8)
+          ],
+        ),
+        child: status == 2 
+          ? Icon(Icons.check, color: Colors.white, size: 20) 
+          : (status == 1 ? Icon(Icons.close, color: Colors.white, size: 20) : null),
+      ),
     );
   }
 }

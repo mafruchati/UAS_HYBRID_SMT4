@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:implementasi_busgo/halaman%20utama/tiket.dart';
+import 'package:implementasi_busgo/main.dart';
 
 
 void main() {
