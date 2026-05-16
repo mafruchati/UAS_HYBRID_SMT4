@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(13, 110, 253, 1),
+      backgroundColor: const Color.fromARGB(255, 6, 49, 115),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -32,7 +32,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.directions_bus,
-                    color: const Color.fromRGBO(13, 110, 253, 1),
+                    color: const Color.fromARGB(255, 6, 54, 125),
                     size: 70,
                   ),
                 ),
@@ -107,7 +107,7 @@ class LoginPage extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+                          backgroundColor: const Color.fromARGB(255, 3, 69, 144),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),

@@ -17,31 +17,20 @@ class SeatSelectionPage extends StatefulWidget {
 }
 
 class _SeatSelectionPageState extends State<SeatSelectionPage> {
-  // Status kursi: 0=available, 1=booked, 2=selected (your choice)
-  // Kita buat dua map data untuk Lower dan Upper Deck
   late List<List<int>> lowerSeats;
   late List<List<int>> upperSeats;
-
   bool isLowerDeck = true;
 
   @override
   void initState() {
     super.initState();
-    // Inisialisasi data dummy
-    lowerSeats = [
-      [1, 0, 0, 0],
-      [0, 0, 0, 1],
-      [0, 0, 0, 0],
-      [1, 1, 0, 0],
-      [0, 0, 0, 1],
-    ];
-    upperSeats = [
-      [0, 0, 0, 0],
-      [1, 1, 1, 1],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 1, 0],
-    ];
+    // Inisialisasi data dummy (5 baris, 4 kolom)
+    lowerSeats = List.generate(5, (_) => [1, 0, 0, 0]);
+    upperSeats = List.generate(5, (_) => [0, 0, 0, 1]);
+    
+    // Memberikan variasi data sedikit
+    lowerSeats[1] = [0, 0, 0, 1];
+    lowerSeats[3] = [1, 1, 0, 0];
   }
 
   void _handleSeatTap(int row, int col) {
@@ -58,11 +47,14 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D6EFD), // Biru Utama
+      backgroundColor: const Color.fromARGB(255, 3, 65, 158),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text('Pilih Kursi', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: [
@@ -74,49 +66,51 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
       ),
       body: Column(
         children: [
-          // Info Rute
           _buildRouteInfo(),
-          
           SizedBox(height: 20),
-
-          // Legend
           _buildLegend(),
-
           SizedBox(height: 20),
 
-          // Area Bus
+          // Area Bus dengan Scroll agar tidak overflow
           Expanded(
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
               padding: EdgeInsets.symmetric(vertical: 20),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
                 border: Border.all(color: Colors.white24),
               ),
-              child: Column(
-                children: [
-                  // Driver/Front Area Indicator
-                  _buildDriverArea(),
-                  
-                  Expanded(
-                    child: Row(
+              child: SingleChildScrollView( // <--- Solusi Overflow
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    _buildDriverArea(),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _seatColumn(0), // Kolom A & B
+                        _seatColumn(0), // Kolom kiri (A & B)
                         _buildDeckIndicator(),
-                        _seatColumn(2), // Kolom C & D
+                        _seatColumn(2), // Kolom kanan (C & D)
                       ],
                     ),
-                  ),
-                ],
+                    SizedBox(height: 40), // Ruang tambahan di bawah scroll
+                  ],
+                ),
               ),
             ),
           ),
 
-          // Toggle Lower/Upper
-          _buildDeckToggle(),
-          SizedBox(height: 30),
+          // Bagian Toggle tetap di bawah (Fixed)
+          Container(
+            padding: EdgeInsets.only(top: 15, bottom: 30),
+            color: Color.fromARGB(255, 5, 62, 148),
+            child: _buildDeckToggle(),
+          ),
         ],
       ),
     );
@@ -149,23 +143,22 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
         SizedBox(width: 15),
         _legendItem(Colors.white, 'Available'),
         SizedBox(width: 15),
-        _legendItem(Colors.orange, 'Your Seat', isCircle: true),
+        _legendItem(Colors.orange, 'Your Seat'),
       ],
     );
   }
 
-  Widget _legendItem(Color color, String label, {bool isCircle = false}) {
+  Widget _legendItem(Color color, String label) {
     return Row(
       children: [
         Container(
-          width: 16, height: 16,
+          width: 14, height: 14,
           decoration: BoxDecoration(
             color: color,
-            shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-            borderRadius: isCircle ? null : BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
-        SizedBox(width: 5),
+        SizedBox(width: 6),
         Text(label, style: TextStyle(color: Colors.white, fontSize: 12)),
       ],
     );
@@ -173,37 +166,45 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
 
   Widget _buildDriverArea() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Icon(Icons.settings_input_component_rounded, color: Colors.white30, size: 40), // Icon Setir
+      padding: const EdgeInsets.only(bottom: 25),
+      child: Column(
+        children: [
+          Icon(Icons.settings_input_component_rounded, color: Colors.white30, size: 40),
+          SizedBox(height: 10),
+          Container(width: 60, height: 2, color: Colors.white12),
+        ],
+      ),
     );
   }
 
   Widget _buildDeckIndicator() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       child: RotatedBox(
         quarterTurns: 3,
         child: Text(
           isLowerDeck ? 'LOWER DECK' : 'UPPER DECK',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2),
+          style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold, letterSpacing: 2, fontSize: 12),
         ),
       ),
     );
   }
 
   Widget _buildDeckToggle() {
-    return Container(
-      width: 220,
-      height: 45,
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          _toggleButton('LOWER', isLowerDeck, () => setState(() => isLowerDeck = true)),
-          _toggleButton('UPPER', !isLowerDeck, () => setState(() => isLowerDeck = false)),
-        ],
+    return Center(
+      child: Container(
+        width: 220,
+        height: 48,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          children: [
+            _toggleButton('LOWER', isLowerDeck, () => setState(() => isLowerDeck = true)),
+            _toggleButton('UPPER', !isLowerDeck, () => setState(() => isLowerDeck = false)),
+          ],
+        ),
       ),
     );
   }
@@ -212,7 +213,9 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          margin: EdgeInsets.all(4),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: active ? Colors.white : Colors.transparent,
@@ -233,8 +236,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
   Widget _seatColumn(int colStart) {
     List<List<int>> currentSeats = isLowerDeck ? lowerSeats : upperSeats;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(5, (row) {
+      children: List.generate(currentSeats.length, (row) {
         return Row(
           children: [
             _seatBox(row, colStart, currentSeats[row][colStart]),
@@ -249,20 +251,18 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
   Widget _seatBox(int row, int col, int status) {
     return GestureDetector(
       onTap: () => _handleSeatTap(row, col),
-      child: Container(
-        width: 40,
-        height: 40,
-        margin: EdgeInsets.symmetric(vertical: 6),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        width: 45,
+        height: 45,
+        margin: EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: status == 0 ? Colors.white : (status == 1 ? Colors.red[300] : Colors.orange),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            if (status == 2) BoxShadow(color: Colors.orange.withOpacity(0.5), blurRadius: 8)
-          ],
+          borderRadius: BorderRadius.circular(12),
         ),
         child: status == 2 
-          ? Icon(Icons.check, color: Colors.white, size: 20) 
-          : (status == 1 ? Icon(Icons.close, color: Colors.white, size: 20) : null),
+          ? Icon(Icons.check, color: Colors.white, size: 22) 
+          : (status == 1 ? Icon(Icons.close, color: Colors.white, size: 22) : null),
       ),
     );
   }

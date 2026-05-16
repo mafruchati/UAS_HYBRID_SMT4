@@ -16,21 +16,40 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   final TextEditingController searchController = TextEditingController();
 
+  // 1. Update data jadwal dengan tambahan Jam dan Harga
   final List<Map<String, dynamic>> jadwalBus = [
     {
-      'rute': 'Jakarta ➔ Solo',
-      'waktu': '30 min',
-      'tujuan': 'Terminal Tirtonadi'
+      'asal': 'Jakarta',
+      'tujuan_kota': 'Solo',
+      'waktu_tunggu': '30',
+      'durasi': '15 min',
+      'jam_berangkat': '14:00',
+      'jam_tiba': '14:50',
+      'terminal': 'Terminal Tirtonadi',
+      'harga': 'Rp 150.000',
+      'tanggal': '25 Mar, 12:30 PM'
     },
     {
-      'rute': 'Bandung ➔ Semarang',
-      'waktu': '45 min',
-      'tujuan': 'Terminal Terboyo'
+      'asal': 'Bandung',
+      'tujuan_kota': 'Semarang',
+      'waktu_tunggu': '45',
+      'durasi': '20 min',
+      'jam_berangkat': '15:00',
+      'jam_tiba': '15:20',
+      'terminal': 'Terminal Terboyo',
+      'harga': 'Rp 185.000',
+      'tanggal': '25 Mar, 13:00 PM'
     },
     {
-      'rute': 'Surabaya ➔ Bali',
-      'waktu': '60 min',
-      'tujuan': 'Terminal Ubung'
+      'asal': 'Surabaya',
+      'tujuan_kota': 'Bali',
+      'waktu_tunggu': '60',
+      'durasi': '45 min',
+      'jam_berangkat': '16:00',
+      'jam_tiba': '16:45',
+      'terminal': 'Terminal Mengwi',
+      'harga': 'Rp 250.000',
+      'tanggal': '25 Mar, 14:15 PM'
     },
   ];
 
@@ -45,7 +64,9 @@ class _HomePageState extends State<HomePage> {
   void _filterSearch(String query) {
     setState(() {
       displayedJadwal = jadwalBus
-          .where((bus) => bus['rute']!.toLowerCase().contains(query.toLowerCase()))
+          .where((bus) => 
+              bus['asal']!.toLowerCase().contains(query.toLowerCase()) ||
+              bus['tujuan_kota']!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -55,11 +76,11 @@ class _HomePageState extends State<HomePage> {
     
     Widget page;
     if (index == 1) {
-      page = TiketPage();
+      page = const TiketPage();
     } else if (index == 2) {
-      page = BantuanPage(); 
+      page = const BantuanPage(); 
     } else {
-      page = ProfilPage(); 
+      page = const ProfilPage(); 
     }
 
     Navigator.push(context, MaterialPageRoute(builder: (_) => page));
@@ -110,7 +131,7 @@ class _HomePageState extends State<HomePage> {
             left: 0, right: 0, bottom: 0,
             child: Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: Color(0xFFF8F9FB), // Background kartu sedikit abu biar kontras
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(35), topRight: Radius.circular(35)),
               ),
               child: Column(
@@ -129,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Expanded(
                     child: displayedJadwal.isEmpty 
-                    ? DataKosong() 
+                    ? const DataKosong() 
                     : ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         itemCount: displayedJadwal.length,
@@ -145,41 +166,112 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // 2. MODIFIKASI UTAMA: Desain kartu mirip BlueBus
   Widget _buildTicketCard(Map<String, dynamic> bus) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4))],
         border: Border.all(color: Colors.grey.shade200)
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // BARIS ATAS: DEPARTURE & TRAVEL TIME
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(bus['waktu'], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const Icon(Icons.ac_unit, size: 20, color: Colors.blueGrey),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("DEPARTURE ON", style: TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(bus['waktu_tunggu'], style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                      const Text(" min", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("TRAVEL TIME  ${bus['durasi']}", style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time_filled, size: 14, color: Colors.black54),
+                      const SizedBox(width: 4),
+                      Text(bus['jam_berangkat'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.access_time_filled, size: 14, color: Colors.black54),
+                      const SizedBox(width: 4),
+                      Text(bus['jam_tiba'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
+              ),
+              const Icon(Icons.air_rounded, color: Color(0xFF1B2E4B), size: 24),
             ],
           ),
-          const SizedBox(height: 15),
+          
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Divider(height: 1, thickness: 0.5),
+          ),
+
+          // BARIS TENGAH: RUTE DENGAN TITIK (ORANGE & BLUE)
           Row(
             children: [
+              Column(
+                children: [
+                  const Icon(Icons.circle, size: 10, color: Colors.orange),
+                  Container(width: 1.5, height: 25, color: Colors.grey[200]),
+                  const Icon(Icons.circle, size: 10, color: Colors.blue),
+                ],
+              ),
+              const SizedBox(width: 15),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(bus['rute'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text(bus['tujuan'], style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text("${bus['asal']}  →  ${bus['tujuan_kota']}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                    const Text("From", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                    Text(bus['terminal'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+                    Text(bus['tanggal'], style: const TextStyle(fontSize: 10, color: Colors.grey)),
                   ],
                 ),
               ),
+            ],
+          ),
+
+          const SizedBox(height: 15),
+
+          // BARIS BAWAH: HARGA & TOMBOL BUY TICKET
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(bus['harga'], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B2E4B))),
               ElevatedButton(
                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SeatSelectionPage())),
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1B2E4B)),
-                child: const Text("BUY", style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1B2E4B),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  elevation: 0,
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.confirmation_num_outlined, size: 16, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text("BUY TICKET", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                  ],
+                ),
               )
             ],
           ),
