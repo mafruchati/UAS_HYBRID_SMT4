@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
+<<<<<<< HEAD
+        android:label="uas_hybrid"
+=======
         android:label="implementasi_busgo"
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

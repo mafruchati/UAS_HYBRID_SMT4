@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
+    "name": "uas_hybrid",
+    "short_name": "uas_hybrid",
+=======
     "name": "implementasi_busgo",
     "short_name": "implementasi_busgo",
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
