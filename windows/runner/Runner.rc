@@ -90,12 +90,21 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
+<<<<<<< HEAD
             VALUE "FileDescription", "uas_hybrid" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "uas_hybrid" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "uas_hybrid.exe" "\0"
             VALUE "ProductName", "uas_hybrid" "\0"
+=======
+            VALUE "FileDescription", "implementasi_busgo" "\0"
+            VALUE "FileVersion", VERSION_AS_STRING "\0"
+            VALUE "InternalName", "implementasi_busgo" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "implementasi_busgo.exe" "\0"
+            VALUE "ProductName", "implementasi_busgo" "\0"
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

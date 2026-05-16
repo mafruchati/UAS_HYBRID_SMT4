@@ -15,7 +15,11 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
                BuildableName = "uas_hybrid.app"
+=======
+               BuildableName = "implementasi_busgo.app"
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
                BlueprintName = "Runner"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
@@ -31,7 +35,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
             BuildableName = "uas_hybrid.app"
+=======
+            BuildableName = "implementasi_busgo.app"
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
@@ -66,7 +74,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
             BuildableName = "uas_hybrid.app"
+=======
+            BuildableName = "implementasi_busgo.app"
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
@@ -83,7 +95,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
             BuildableName = "uas_hybrid.app"
+=======
+            BuildableName = "implementasi_busgo.app"
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>

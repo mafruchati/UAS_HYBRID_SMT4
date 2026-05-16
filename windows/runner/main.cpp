@@ -27,7 +27,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
+<<<<<<< HEAD
   if (!window.Create(L"uas_hybrid", origin, size)) {
+=======
+  if (!window.Create(L"implementasi_busgo", origin, size)) {
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

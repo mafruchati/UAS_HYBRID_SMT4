@@ -1,10 +1,18 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
+<<<<<<< HEAD
 project(uas_hybrid LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "uas_hybrid")
+=======
+project(implementasi_busgo LANGUAGES CXX)
+
+# The name of the executable created for the application. Change this to change
+# the on-disk name of your application.
+set(BINARY_NAME "implementasi_busgo")
+>>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
