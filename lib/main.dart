@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // Memanggil halaman login sebagai halaman awal
-      home: const LoginPage(), 
+      home: LoginPage(), 
     );
   }
 }
