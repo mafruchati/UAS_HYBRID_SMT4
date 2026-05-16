@@ -7,13 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-<<<<<<< HEAD
-
-import 'package:uas_hybrid/main.dart';
-=======
 import 'package:implementasi_busgo/main.dart';
-
->>>>>>> 90433fca3c1efbb82d8c3f6d080e4a0374c844d4
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
